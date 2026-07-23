@@ -70,7 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
   splitTextElements(".tag p", "words");
   splitTextElements(".card h1", "words,chars", true);
  
-  const isMobile = window.innerWidth <= 1000;
+  const isMobile = window.innerWidth <= 700;
 
   gsap.set(
     [
@@ -87,10 +87,12 @@ document.addEventListener("DOMContentLoaded", () => {
     scale: 0.75,
   });
 
+  
+
   if (document.querySelector(".outro-title .char")) {
     gsap.set(".outro-title .char", {
       x: isMobile ? "-3rem" : "-8rem",
-      fontSize: isMobile ? "6rem" : "14rem",
+      fontSize: isMobile ? "6rem" : "6rem",
       fontWeight: "500"
     });
   }
@@ -127,7 +129,91 @@ document.addEventListener("DOMContentLoaded", () => {
       stagger: 0.05,
     },
     0.5
-  );
+  ).to(".preloader .outro-title .char:not(.first-char) span",{
+    y: "0%",
+    duration: 0.75,
+    stagger: 0.075,
+    opacity:1,
+  },
+  2
+  ).fromTo(".preloader .outro-title ",{
+    y: -100, 
+    /* delay:2, */
+    opacity: "0"},{
+      y:0,
+      duration: 1,
+      opacity: "100",
+      stagger: 0.35,
+      ease: "power2.out",
+      delay:0,
+      
+    },2.2
+  ).to(".preloader .intro-title .char:not(.first-char) span",{
+    y: "100%",
+    duration: 0.75,
+    stagger: 0.05,
+    opacity: 0,
+  },
+  2
+  ).to(".preloader .intro-title .first-char", {
+    x: isMobile ? "9rem" : "21.25rem",
+    duration: 1,
+  }, 3.5
+  ).to(".preloader .outro-title .char",{
+    x: isMobile ? "-3rem" : "-8rem",
+    duration: 1,
+    
+  },
+  3.5
+  ).to(".preloader .intro-title .first-char",{
+    x: isMobile ? "7.5rem" : "19rem" ,
+    y: isMobile ? "-1rem" : "-5rem",
+    fontWeight: "900",
+    scale: 0.60,
+    duration: 0.75,
+  },
+  4.5
+  ).to(".preloader .outro-title .char",{
+    x: isMobile ? "-3rem" : "-8rem",
+    fontSize: isMobile ? "6rem" : "14rem",
+    duration: 0.75,
+    onComplete: () => {
+      gsap.set(".preloader",{
+       clipPath: "polygon(0 0, 100% 0%, 100% 50%, 0 50%)",
+      });
+      gsap.set(".split-overlay",{
+       clipPath: "polygon(0 50%, 100% 50%, 100% 100%, 0 100%)",
+      });
+    }
+  },4.5
+  ).fromTo(".container", {
+      delay: 2.5,
+      clipPath: "polygon(0% 48%, 0 48%, 0 52%, 0% 52%)",
+      duration: 1.5,
+      ease: "power4.inOut",
+    },{
+      clipPath: "polygon(100% 48%, 0 48%, 0 52%, 100% 52%)",
+    }) ;
+
+    tags.forEach((tag, index) =>{
+      tl.to(
+        tag.querySelectorAll("p .word"),
+        {
+          y: "100%",
+          duration: 0.75,
+        },
+        5.5 + index * 0.1
+      );
+    });
+
+    tl.to([".preloader", ".split-overlay"],{
+      y: (i) => (i === 0 ? "-50%" : "50%"),
+      duration: 1,
+    },6
+  ).to(".container",{
+    clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
+    duration: 1,
+  },6)
 });
 
 /*  const splitTextElements = (
