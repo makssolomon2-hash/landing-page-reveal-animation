@@ -208,11 +208,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     tl.to([".preloader", ".split-overlay"],{
       y: (i) => (i === 0 ? "-50%" : "50%"),
-      duration: 1,
+      duration: 2,
+      ease:"power4.inOut"
     },6
   ).to(".container",{
-    clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
-    duration: 1,
+    clipPath: "polygon(100% 0%, 0 0%, 0 100%, 100% 100%)",
+    duration: 2,
+    ease:"power4.inOut"
   },6)
 });
 
