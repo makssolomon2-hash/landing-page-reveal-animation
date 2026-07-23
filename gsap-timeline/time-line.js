@@ -1,4 +1,4 @@
-const mm = gsap.matchMedia();
+/* const mm = gsap.matchMedia();
 
 // Apply responsive title styles and auto-update when crossing breakpoints.
 mm.add("(max-width: 1000px)", () => {
@@ -14,7 +14,7 @@ mm.add("(min-width: 1001px)", () => {
     fontWeight: "900",
   });
 });
-
+ */
 
 
 

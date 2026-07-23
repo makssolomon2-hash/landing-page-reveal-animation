@@ -5,7 +5,7 @@ import { CustomEase } from "gsap/CustomEase";
 import { SplitText } from "gsap/SplitText";
  */
 document.addEventListener("DOMContentLoaded", () => {
-  gsap.registerPlugin(SplitText, CustomEase)
+  if (!window.gsap) return;
   // gsap code here!
   
   /* gsap.to('.tags-overlay',
@@ -43,12 +43,9 @@ document.addEventListener("DOMContentLoaded", () => {
     },{
       delay: 3,
       clipPath: "polygon(100% 48%, 0 48%, 0 52%, 100% 52%)",
-    })
-  */
+    }) */
+ 
     
-  CustomEase.create("hop", ".8, 0, .3, 1")
-  new SplitText(".tag", { type: "words,chars" });
-
   const splitTextElements = (
     selector,
     type = "words,chars",
@@ -56,36 +53,29 @@ document.addEventListener("DOMContentLoaded", () => {
    ) => {
     const elements = document.querySelectorAll(selector);
     elements.forEach((element) => {
-      const splitText = new SplitText(element, {
-        type,
-        wordClass: "word",
-        charClass: "char",
-      });
-
       if (type.includes("chars")) {
-        splitText.chars.forEach((char,index) =>{
-          const originalText = char.textContent;
-          char.innerHTML = `<span>${originalText}</span>`;
-
-          if(addFirstChar && index === 0){
-            char.classList.add("first-char");
-          }
-        })
+        element.innerHTML = [...element.textContent].map((char, index) =>
+          char === " " ? " " : `<span class="char${addFirstChar && index === 0 ? " first-char" : ""}"><span>${char}</span></span>`
+        ).join("");
+      } else {
+        element.innerHTML = element.textContent.split(" ").map((word) =>
+          `<span class="word">${word}</span>`
+        ).join(" ");
       }
     })
   }
 
-  splitTextElements(".intro-title h1", "words, chars", true);
+  splitTextElements(".intro-title h1", "words,chars", true);
   splitTextElements(".outro-title h1");
   splitTextElements(".tag p", "words");
-  splitTextElements(".card h1", "words, chars", true);
+  splitTextElements(".card h1", "words,chars", true);
  
   const isMobile = window.innerWidth <= 1000;
 
   gsap.set(
     [
       ".split-overlay .intro-title .first-char span",
-      ".split-overlay .outro-title .char span",
+      ".outro-title .char span",
     ],
     { y: "0%" }
   );
@@ -97,11 +87,47 @@ document.addEventListener("DOMContentLoaded", () => {
     scale: 0.75,
   });
 
-  gsap.set(".split-overlay .outro-title .char", {
-    x: isMobile ? "-3rem" : "-8rem",
-    fontSize: isMobile ? "6rem" : "14rem",
-    fontWeight: "500"
-  });
+  if (document.querySelector(".outro-title .char")) {
+    gsap.set(".outro-title .char", {
+      x: isMobile ? "-3rem" : "-8rem",
+      fontSize: isMobile ? "6rem" : "14rem",
+      fontWeight: "500"
+    });
+  }
+
+  const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+  const tags = gsap.utils.toArray(".tag");
+  gsap.set(".tag .word", { y: "-100%" });
+
+  /* gsap.to(".preloader",{
+    x:1000,
+    duration:3,
+    opacity:0
+  }) */
+
+  tags.forEach((tag, index) => {
+    const words = tag.querySelectorAll("p .word");
+    if (words.length) {
+      tl.to(
+        words,
+        {
+          y: "0%",
+          duration: 0.75,
+        },
+        0.5 + index * 0.1
+      );
+    }
+  })
+
+  tl.to(
+    "body > .preloader .intro-title .char span",
+    {
+      y: "0%",
+      duration: 0.75,
+      stagger: 0.05,
+    },
+    0.5
+  );
 });
 
 /*  const splitTextElements = (
