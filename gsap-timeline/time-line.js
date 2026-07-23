@@ -1,3 +1,23 @@
+const mm = gsap.matchMedia();
+
+// Apply responsive title styles and auto-update when crossing breakpoints.
+mm.add("(max-width: 1000px)", () => {
+  gsap.set(".hero-title", {
+    fontSize: "6rem",
+    fontWeight: "800",
+  });
+});
+
+mm.add("(min-width: 1001px)", () => {
+  gsap.set(".hero-title", {
+    fontSize: "14rem",
+    fontWeight: "900",
+  });
+});
+
+
+
+
 const tl = gsap.timeline();
 
 tl.from(".hero-title",{
@@ -78,3 +98,4 @@ tl
   duration:2,
   ease:"power3.out"
 })
+
